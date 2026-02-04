@@ -140,6 +140,12 @@ export default function Page() {
           onChangeText={(password) => setPassword(password)}
         />
 
+        <TouchableOpacity onPress={() => router.push("/reset-password")}
+          style={{ alignSelf: "flex-end", marginBottom: 6 }}
+        >
+          <Text style={styles.linkText}>Forgot password?</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.button} onPress={onSignInPress}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
