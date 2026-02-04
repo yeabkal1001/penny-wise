@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Alert, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 import { styles } from "../../assets/styles/profileSettings.styles";
 import PageLoader from "../../components/PageLoader";
