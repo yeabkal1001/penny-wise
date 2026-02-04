@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 import { Alert, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import * as WebBrowser from "expo-web-browser";
-import * as SecureStore from "expo-secure-store";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 import { styles } from "../../assets/styles/profileSettings.styles";
 import PageLoader from "../../components/PageLoader";
+import { getStoredItem, setStoredItem } from "../../lib/storage";
 
 const SECURITY_KEY = "pennywise_security";
 
@@ -21,7 +21,7 @@ export default function SecurityScreen() {
   useEffect(() => {
     const loadSecurity = async () => {
       try {
-        const stored = await SecureStore.getItemAsync(SECURITY_KEY);
+        const stored = await getStoredItem(SECURITY_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
           setBiometrics(Boolean(parsed.biometrics));
@@ -40,7 +40,7 @@ export default function SecurityScreen() {
     setBiometrics(value);
     setIsSaving(true);
     try {
-      await SecureStore.setItemAsync(SECURITY_KEY, JSON.stringify({ biometrics: value }));
+      await setStoredItem(SECURITY_KEY, JSON.stringify({ biometrics: value }));
     } catch (error) {
       console.log("Error saving security", error);
       Alert.alert("Update failed", "Please try again.");

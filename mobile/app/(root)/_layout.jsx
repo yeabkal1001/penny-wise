@@ -16,22 +16,16 @@ export default function Layout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          left: 8,
-          right: 8,
-          bottom: 16,
           height: 64,
-          borderRadius: 24,
           backgroundColor: COLORS.background,
           borderTopColor: "transparent",
-          elevation: 8,
+          elevation: 6,
           shadowColor: COLORS.shadow,
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.2,
-          shadowRadius: 12,
-          paddingBottom: 6,
-          paddingTop: 6,
-          paddingHorizontal: 0,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.12,
+          shadowRadius: 8,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
         tabBarContentContainerStyle: {
           paddingHorizontal: 12,
@@ -127,6 +121,7 @@ export default function Layout() {
       <Tabs.Screen name="security" options={{ href: null }} />
       <Tabs.Screen name="settings" options={{ href: null }} />
       <Tabs.Screen name="help" options={{ href: null }} />
+      <Tabs.Screen name="update-saved" options={{ href: null }} />
     </Tabs>
   );
 }

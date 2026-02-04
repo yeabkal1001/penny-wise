@@ -146,6 +146,8 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
     borderRadius: 18,
     padding: 14,
+    borderWidth: 1,
+    borderColor: COLORS.cardBorder,
     shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,

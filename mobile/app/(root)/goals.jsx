@@ -156,7 +156,11 @@ export default function GoalsScreen() {
   if (isBusy) return <PageLoader />;
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 120 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={20} color={COLORS.textDark} />
@@ -234,7 +238,7 @@ export default function GoalsScreen() {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.linkButton}
-                    onPress={() => handleUpdateSaved(goal)}
+                    onPress={() => router.push(`/update-saved?goalId=${goal.id}`)}
                   >
                     <Text style={styles.linkButtonText}>Update saved</Text>
                   </TouchableOpacity>

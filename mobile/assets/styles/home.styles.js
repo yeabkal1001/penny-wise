@@ -379,6 +379,6 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   transactionsListContent: {
-    paddingBottom: 140,
+    paddingBottom: 160,
   },
 });

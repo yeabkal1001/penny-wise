@@ -91,6 +91,6 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   listContent: {
-    paddingBottom: 24,
+    paddingBottom: 120,
   },
 });

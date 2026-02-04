@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Alert, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
-import * as SecureStore from "expo-secure-store";
 import { COLORS } from "../../constants/colors";
 import { styles } from "../../assets/styles/profileSettings.styles";
 import PageLoader from "../../components/PageLoader";
+import { getStoredItem, setStoredItem } from "../../lib/storage";
 
 const SETTINGS_KEY = "pennywise_settings";
 
@@ -19,7 +19,7 @@ export default function SettingsScreen() {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const stored = await SecureStore.getItemAsync(SETTINGS_KEY);
+        const stored = await getStoredItem(SETTINGS_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
           setPushEnabled(Boolean(parsed.pushEnabled));
@@ -39,7 +39,7 @@ export default function SettingsScreen() {
   const handleManagePreferences = async () => {
     setIsSaving(true);
     try {
-      await SecureStore.setItemAsync(
+      await setStoredItem(
         SETTINGS_KEY,
         JSON.stringify({ pushEnabled, weeklySummary, marketing })
       );

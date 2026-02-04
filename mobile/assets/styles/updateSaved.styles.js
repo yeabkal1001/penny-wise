@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
   },
-  searchCard: {
+  card: {
     backgroundColor: COLORS.card,
     borderRadius: 20,
     padding: 16,
@@ -38,61 +38,46 @@ export const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    borderWidth: 1,
-    borderColor: COLORS.cardBorder,
-    borderRadius: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: COLORS.card,
-  },
-  input: {
-    flex: 1,
-    fontSize: 14,
-    color: COLORS.textDark,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: COLORS.textDark,
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  filterRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  emptyCategoryHint: {
+  label: {
     fontSize: 12,
     color: COLORS.textDarkMuted,
-    marginTop: 4,
+    marginBottom: 8,
   },
-  filterChip: {
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+  input: {
+    backgroundColor: COLORS.cardAlt,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: COLORS.textDark,
+  },
+  goalChip: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 16,
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.cardBorder,
+    backgroundColor: COLORS.cardAlt,
+    marginBottom: 8,
   },
-  filterChipActive: {
+  goalChipActive: {
     backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
   },
-  filterChipText: {
-    fontSize: 12,
+  goalChipText: {
+    fontSize: 13,
     fontWeight: "600",
     color: COLORS.textDark,
   },
-  filterChipTextActive: {
+  goalChipTextActive: {
     color: COLORS.white,
   },
-  listContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 120,
+  actionButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 18,
+    alignItems: "center",
+  },
+  actionButtonText: {
+    color: COLORS.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 });

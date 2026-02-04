@@ -59,7 +59,7 @@ export default function ProfileScreen() {
         <View style={{ width: 36 }} />
       </View>
 
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: 120 }]}>
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <Ionicons name="person" size={32} color={COLORS.textDark} />
