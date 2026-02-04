@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PageLoader from "../../components/PageLoader";
@@ -54,6 +54,14 @@ export default function AnalysisScreen() {
     loadBudgets();
     loadGoals();
   }, [loadData, loadBudgets, loadGoals]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      loadBudgets();
+      loadGoals();
+    }, [loadData, loadBudgets, loadGoals])
+  );
 
   const { chartData, incomeTotal, expenseTotal } = useMemo(() => {
     const totals = { income: 0, expense: 0 };

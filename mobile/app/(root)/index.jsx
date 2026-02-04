@@ -139,7 +139,7 @@ export default function Page() {
                 />
                 <View style={styles.welcomeContainer}>
                   <Text style={styles.welcomeText}>Welcome,</Text>
-                  <Text style={styles.usernameText}>
+                  <Text style={styles.usernameText} numberOfLines={1} ellipsizeMode="tail">
                     {user?.emailAddresses?.[0]?.emailAddress?.split("@")[0]}
                   </Text>
                 </View>

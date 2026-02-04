@@ -5,8 +5,10 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
   return (
-    <ClerkProvider tokenCache={tokenCache}>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <SafeScreen>
         <Slot />
       </SafeScreen>

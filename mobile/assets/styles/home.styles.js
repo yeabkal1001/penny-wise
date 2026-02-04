@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
   },
   welcomeContainer: {
     flex: 1,
+    minWidth: 0,
   },
   welcomeText: {
     fontSize: 14,
@@ -40,6 +41,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: COLORS.text,
+    flexShrink: 1,
   },
   headerRight: {
     flexDirection: "row",

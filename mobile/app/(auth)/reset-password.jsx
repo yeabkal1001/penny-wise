@@ -29,12 +29,32 @@ export default function ResetPasswordScreen() {
     setIsPending(true);
     setError("");
     try {
-      await signIn.create({ identifier: emailAddress.trim() });
+      const attempt = await signIn.create({
+        identifier: emailAddress.trim(),
+        strategy: "reset_password_email_code",
+      });
+
+      if (attempt.status === "needs_first_factor") {
+        setIsVerifying(true);
+        return;
+      }
+
+      if (attempt.status === "needs_identifier") {
+        setError("Please check your email and try again.");
+        return;
+      }
+
       await signIn.prepareFirstFactor({ strategy: "email_code" });
       setIsVerifying(true);
     } catch (err) {
-      setError("Unable to send reset code. Please try again.");
-      console.error(err);
+      try {
+        await signIn.create({ identifier: emailAddress.trim() });
+        await signIn.prepareFirstFactor({ strategy: "email_code" });
+        setIsVerifying(true);
+      } catch (fallbackError) {
+        setError("Unable to send reset code. Please try again.");
+        console.error(fallbackError);
+      }
     } finally {
       setIsPending(false);
     }
@@ -58,7 +78,27 @@ export default function ResetPasswordScreen() {
     setIsPending(true);
     setError("");
     try {
-      const attempt = await signIn.attemptFirstFactor({
+      let attempt = await signIn.attemptFirstFactor({
+        strategy: "reset_password_email_code",
+        code: code.trim(),
+      });
+
+      if (attempt.status === "needs_new_password") {
+        const resetAttempt = await signIn.resetPassword({ password: newPassword });
+        if (resetAttempt.status === "complete") {
+          await setActive({ session: resetAttempt.createdSessionId });
+          router.replace("/");
+          return;
+        }
+      }
+
+      if (attempt.status === "complete") {
+        await setActive({ session: attempt.createdSessionId });
+        router.replace("/");
+        return;
+      }
+
+      attempt = await signIn.attemptFirstFactor({
         strategy: "email_code",
         code: code.trim(),
       });
@@ -80,7 +120,8 @@ export default function ResetPasswordScreen() {
 
       setError("Reset failed. Please try again.");
     } catch (err) {
-      setError("Reset failed. Please try again.");
+      const message = err?.errors?.[0]?.message || "Reset failed. Please try again.";
+      setError(message);
       console.error(err);
     } finally {
       setIsPending(false);
