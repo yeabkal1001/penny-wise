@@ -1,77 +1,86 @@
-<h1 align="center">💸 Wallet - Expense Tracker with React Native & Express 🚀</h1>
+<div align="center">
+	<img src="mobile/assets/images/Gemini_Generated_Image_s1v35is1v35is1v3.png" alt="Penny Wise" width="720" />
+</div>
 
-![Demo App](/mobile/assets/images/screenshot-for-readme.png)
+# Penny Wise
 
-## 🎯 What You'll Build
+Smart budgeting, simplified. Track transactions, set budgets, manage savings goals, and stay on top of your finances across mobile and web.
 
-This isn't just a front-end app — it's a **complete mobile application** with backend integration, authentication, and cloud-based storage.
+## Built by
 
-✅ Works on **iOS & Android (simulator or real device)**  
-✅ Uses your existing **React knowledge**  
-✅ No need for Swift, Kotlin, or native modules  
-✅ Full-stack project in **under 4 hours**
+- Yeabsira Kayel
+- Saliha Abdo
 
----
+## Features
 
-## 🧑‍🍳 App Features Overview
+- Secure sign in and password reset
+- Transaction tracking with categories
+- Budgets with progress insights
+- Savings goals with target updates
+- Notifications and quick insights
+- Analysis dashboard with charts
 
-- 🔐 **Authentication** with email verification using **Clerk**
-- 📝 **Signup & Login** flows with 6-digit email code
-- 🏠 **Home Screen** that shows your current balance & past transactions
-- ➕ **Create Screen** to add **income** or **expense** transactions
-- 🔄 **Pull to refresh** functionality from scratch
-- 🗑️ **Delete transactions** to update balance
-- 🚪 **Logout** to navigate back to login screen
+## Tech Stack
 
----
+- Expo (React Native)
+- Expo Router
+- Node.js + Express
+- Neon Postgres
 
-## 🧠 What You’ll Learn
+## Project Structure
 
-- ⚙️ Build and deploy an **Express API** with **PostgreSQL** using **Neon**
-- 🔐 Implement authentication & email verification with **Clerk**
-- 📲 Build a full mobile app with **React Native & Expo**
-- 🧵 Manage state and navigation using **React Navigation**
-- 🛡️ Understand and apply **Rate Limiting** using **Redis**
-- 🚀 Deploy both backend & mobile with cloud-based tools
-- 🧪 Beginner-friendly for first-time React Native devs
-
----
-
-## 📁 .env Setup
-
-### ⚙️ Backend (`/backend`)
-
-```bash
-PORT=5001
-NODE_ENV=development
-
-CLERK_PUBLISHABLE_KEY=<your_clerk_publishable_key>
-CLERK_SECRET_KEY=<your_clerk_secret_key>
-
-DATABASE_URL=<your_neon_postgres_connection_url>
-
-REDIS_URL=<your_redis_connection_url>
+```
+backend/   # API server
+mobile/    # Expo app
 ```
 
-### ⚙️ Backend (`/backend`)
+## Getting Started
 
-```bash
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=<your_clerk_key>
+### 1) Backend
+
+Create backend environment variables:
+
+```
+DATABASE_URL=your_neon_postgres_url
+UPSTASH_REDIS_REST_URL=optional
+UPSTASH_REDIS_REST_TOKEN=optional
 ```
 
-## ⚙️ Run the backend
+Run the API:
 
-```bash
+```
 cd backend
 npm install
 npm run dev
-
 ```
 
-## 📱 Run the mobile
+### 2) Mobile
 
-```bash
+Create mobile environment variables:
+
+```
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+EXPO_PUBLIC_API_URL=http://localhost:5001/api
+```
+
+Run the app:
+
+```
 cd mobile
 npm install
-npx expo start
+npm start
 ```
+
+## Tests
+
+Backend tests:
+
+```
+cd backend
+npm test
+```
+
+## Notes
+
+- If you are running on a physical device, point `EXPO_PUBLIC_API_URL` to your machine’s IP address.
+- Rate limiting is disabled if Upstash env vars are not provided.
