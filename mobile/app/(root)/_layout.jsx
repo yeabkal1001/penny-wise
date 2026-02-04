@@ -116,6 +116,7 @@ export default function Layout() {
       <Tabs.Screen name="settings" options={{ href: null }} />
       <Tabs.Screen name="help" options={{ href: null }} />
       <Tabs.Screen name="update-saved" options={{ href: null }} />
+      <Tabs.Screen name="reset-password" options={{ href: null }} />
     </Tabs>
   );
 }
