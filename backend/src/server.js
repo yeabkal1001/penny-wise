@@ -13,7 +13,7 @@ import job from "./config/cron.js";
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 if (process.env.NODE_ENV === "production") job.start();
 
@@ -40,8 +40,10 @@ app.use("/api/goals", goalsRoute);
 app.use("/api/categories", categoriesRoute);
 app.use("/api/notifications", notificationsRoute);
 
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server is up and running on PORT:", PORT);
+if (process.env.NODE_ENV !== "test") {
+  initDB().then(() => {
+    app.listen(PORT, () => {
+      console.log("Server is up and running on PORT:", PORT);
+    });
   });
-});
+}
