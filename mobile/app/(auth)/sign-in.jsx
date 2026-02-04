@@ -14,6 +14,8 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [pendingSecondFactor, setPendingSecondFactor] = useState(false);
+  const [code, setCode] = useState("");
 
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
@@ -31,6 +33,13 @@ export default function Page() {
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/");
+      } else if (signInAttempt.status === "needs_second_factor") {
+        try {
+          await signIn.prepareSecondFactor({ strategy: "email_code" });
+        } catch (prepareError) {
+          console.log("Error preparing second factor", prepareError);
+        }
+        setPendingSecondFactor(true);
       } else {
         // If the status isn't complete, check why. User might need to
         // complete further steps.
@@ -45,10 +54,56 @@ export default function Page() {
     }
   };
 
+  const onVerifyPress = async () => {
+    if (!isLoaded) return;
+    try {
+      const attempt = await signIn.attemptSecondFactor({ strategy: "email_code", code });
+      if (attempt.status === "complete") {
+        await setActive({ session: attempt.createdSessionId });
+        router.replace("/");
+      } else {
+        console.error(JSON.stringify(attempt, null, 2));
+      }
+    } catch (err) {
+      setError("Verification failed. Please try again.");
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
+
+  if (pendingSecondFactor) {
+    return (
+      <View style={styles.verificationContainer}>
+        <Text style={styles.verificationTitle}>Verify your email</Text>
+
+        {error ? (
+          <View style={styles.errorBox}>
+            <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity onPress={() => setError("")}>
+              <Ionicons name="close" size={20} color={COLORS.textMuted} />
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        <TextInput
+          style={[styles.verificationInput, error && styles.errorInput]}
+          value={code}
+          placeholder="Enter your verification code"
+          placeholderTextColor={COLORS.textDarkMuted}
+          onChangeText={(value) => setCode(value)}
+        />
+
+        <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
+          <Text style={styles.buttonText}>Verify</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
       enableOnAndroid={true}
       enableAutomaticScroll={true}
       extraScrollHeight={30}
@@ -62,7 +117,7 @@ export default function Page() {
             <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
+              <Ionicons name="close" size={20} color={COLORS.textMuted} />
             </TouchableOpacity>
           </View>
         ) : null}
@@ -72,7 +127,7 @@ export default function Page() {
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter email"
-          placeholderTextColor="#9A8478"
+          placeholderTextColor={COLORS.textDarkMuted}
           onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
         />
 
@@ -80,7 +135,7 @@ export default function Page() {
           style={[styles.input, error && styles.errorInput]}
           value={password}
           placeholder="Enter password"
-          placeholderTextColor="#9A8478"
+          placeholderTextColor={COLORS.textDarkMuted}
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />

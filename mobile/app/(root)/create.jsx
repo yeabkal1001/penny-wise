@@ -9,25 +9,23 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../../constants/api";
 import { styles } from "../../assets/styles/create.styles";
 import { COLORS } from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-
-const CATEGORIES = [
-  { id: "food", name: "Food & Drinks", icon: "fast-food" },
-  { id: "shopping", name: "Shopping", icon: "cart" },
-  { id: "transportation", name: "Transportation", icon: "car" },
-  { id: "entertainment", name: "Entertainment", icon: "film" },
-  { id: "bills", name: "Bills", icon: "receipt" },
-  { id: "income", name: "Income", icon: "cash" },
-  { id: "other", name: "Other", icon: "ellipsis-horizontal" },
-];
+import { useCategories } from "../../hooks/useCategories";
+import ErrorBanner from "../../components/ErrorBanner";
 
 const CreateScreen = () => {
   const router = useRouter();
   const { user } = useUser();
+  const {
+    categories,
+    loadCategories,
+    isLoading: isCategoriesLoading,
+    error: categoriesError,
+  } = useCategories(user?.id);
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -35,8 +33,13 @@ const CreateScreen = () => {
   const [isExpense, setIsExpense] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
   const handleCreate = async () => {
     // validations
+    if (!user?.id) return Alert.alert("Error", "Please sign in again to continue");
     if (!title.trim()) return Alert.alert("Error", "Please enter a transaction title");
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
       Alert.alert("Error", "Please enter a valid amount");
@@ -68,7 +71,7 @@ const CreateScreen = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.log(errorData);
-        throw new Error(errorData.error || "Failed to create transaction");
+        throw new Error(errorData.message || errorData.error || "Failed to create transaction");
       }
 
       Alert.alert("Success", "Transaction created successfully");
@@ -100,6 +103,19 @@ const CreateScreen = () => {
       </View>
 
       <View style={styles.card}>
+        <ErrorBanner message={categoriesError} />
+        {categories.length === 0 && !isCategoriesLoading && (
+          <View style={styles.emptyCategoryCard}>
+            <Text style={styles.emptyCategoryTitle}>No categories yet</Text>
+            <Text style={styles.emptyCategoryText}>Create a category first to log transactions.</Text>
+            <TouchableOpacity
+              style={styles.emptyCategoryButton}
+              onPress={() => router.push("/categories")}
+            >
+              <Text style={styles.emptyCategoryButtonText}>Go to Categories</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.typeSelector}>
           {/* EXPENSE SELECTOR */}
           <TouchableOpacity
@@ -140,7 +156,7 @@ const CreateScreen = () => {
           <TextInput
             style={styles.amountInput}
             placeholder="0.00"
-            placeholderTextColor={COLORS.textLight}
+            placeholderTextColor={COLORS.textDarkMuted}
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
@@ -152,13 +168,13 @@ const CreateScreen = () => {
           <Ionicons
             name="create-outline"
             size={22}
-            color={COLORS.textLight}
+            color={COLORS.textDarkMuted}
             style={styles.inputIcon}
           />
           <TextInput
             style={styles.input}
             placeholder="Transaction Title"
-            placeholderTextColor={COLORS.textLight}
+            placeholderTextColor={COLORS.textDarkMuted}
             value={title}
             onChangeText={setTitle}
           />
@@ -166,11 +182,11 @@ const CreateScreen = () => {
 
         {/* TITLE */}
         <Text style={styles.sectionTitle}>
-          <Ionicons name="pricetag-outline" size={16} color={COLORS.text} /> Category
+          <Ionicons name="pricetag-outline" size={16} color={COLORS.textDark} /> Category
         </Text>
 
         <View style={styles.categoryGrid}>
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <TouchableOpacity
               key={category.id}
               style={[
@@ -182,7 +198,7 @@ const CreateScreen = () => {
               <Ionicons
                 name={category.icon}
                 size={20}
-                color={selectedCategory === category.name ? COLORS.white : COLORS.text}
+                color={selectedCategory === category.name ? COLORS.white : COLORS.textDark}
                 style={styles.categoryIcon}
               />
               <Text

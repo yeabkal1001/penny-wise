@@ -82,7 +82,7 @@ export default function SignUpScreen() {
             <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
+              <Ionicons name="close" size={20} color={COLORS.textMuted} />
             </TouchableOpacity>
           </View>
         ) : null}
@@ -91,7 +91,7 @@ export default function SignUpScreen() {
           style={[styles.verificationInput, error && styles.errorInput]}
           value={code}
           placeholder="Enter your verification code"
-          placeholderTextColor="#9A8478"
+          placeholderTextColor={COLORS.textDarkMuted}
           onChangeText={(code) => setCode(code)}
         />
 
@@ -105,7 +105,7 @@ export default function SignUpScreen() {
   return (
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
       enableOnAndroid={true}
       enableAutomaticScroll={true}
     >
@@ -119,7 +119,7 @@ export default function SignUpScreen() {
             <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
+              <Ionicons name="close" size={20} color={COLORS.textMuted} />
             </TouchableOpacity>
           </View>
         ) : null}
@@ -128,7 +128,7 @@ export default function SignUpScreen() {
           style={[styles.input, error && styles.errorInput]}
           autoCapitalize="none"
           value={emailAddress}
-          placeholderTextColor="#9A8478"
+          placeholderTextColor={COLORS.textDarkMuted}
           placeholder="Enter email"
           onChangeText={(email) => setEmailAddress(email)}
         />
@@ -137,7 +137,7 @@ export default function SignUpScreen() {
           style={[styles.input, error && styles.errorInput]}
           value={password}
           placeholder="Enter password"
-          placeholderTextColor="#9A8478"
+          placeholderTextColor={COLORS.textDarkMuted}
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />

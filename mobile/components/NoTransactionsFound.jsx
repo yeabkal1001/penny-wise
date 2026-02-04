@@ -12,7 +12,7 @@ const NoTransactionsFound = () => {
       <Ionicons
         name="receipt-outline"
         size={60}
-        color={COLORS.textLight}
+        color={COLORS.textDarkMuted}
         style={styles.emptyStateIcon}
       />
       <Text style={styles.emptyStateTitle}>No transactions yet</Text>

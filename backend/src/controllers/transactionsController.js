@@ -40,13 +40,18 @@ export async function createTransaction(req, res) {
 export async function deleteTransaction(req, res) {
   try {
     const { id } = req.params;
+    const { user_id } = req.body;
 
     if (isNaN(parseInt(id))) {
       return res.status(400).json({ message: "Invalid transaction ID" });
     }
 
+    if (!user_id) {
+      return res.status(400).json({ message: "user_id is required" });
+    }
+
     const result = await sql`
-      DELETE FROM transactions WHERE id = ${id} RETURNING *
+      DELETE FROM transactions WHERE id = ${id} AND user_id = ${user_id} RETURNING *
     `;
 
     if (result.length === 0) {

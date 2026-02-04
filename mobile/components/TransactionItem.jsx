@@ -7,9 +7,14 @@ import { formatDate } from "../lib/utils";
 // Map categories to their respective icons
 const CATEGORY_ICONS = {
   "Food & Drinks": "fast-food",
+  Groceries: "basket",
   Shopping: "cart",
   Transportation: "car",
+  Rent: "home",
   Entertainment: "film",
+  Medicine: "medkit",
+  Gifts: "gift",
+  Savings: "wallet",
   Bills: "receipt",
   Income: "cash",
   Other: "ellipsis-horizontal",

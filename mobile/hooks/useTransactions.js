@@ -15,25 +15,34 @@ export const useTransactions = (userId) => {
     expenses: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // useCallback is used for performance reasons, it will memoize the function
   const fetchTransactions = useCallback(async () => {
     try {
+      if (!userId) return;
       const response = await fetch(`${API_URL}/transactions/${userId}`);
+      if (!response.ok) throw new Error("Failed to fetch transactions");
       const data = await response.json();
       setTransactions(data);
+      setError(null);
     } catch (error) {
       console.error("Error fetching transactions:", error);
+      setError("Unable to load transactions. Check your connection.");
     }
   }, [userId]);
 
   const fetchSummary = useCallback(async () => {
     try {
+      if (!userId) return;
       const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
+      if (!response.ok) throw new Error("Failed to fetch summary");
       const data = await response.json();
       setSummary(data);
+      setError(null);
     } catch (error) {
       console.error("Error fetching summary:", error);
+      setError("Unable to load summary. Check your connection.");
     }
   }, [userId]);
 
@@ -41,11 +50,13 @@ export const useTransactions = (userId) => {
     if (!userId) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       // can be run in parallel
       await Promise.all([fetchTransactions(), fetchSummary()]);
     } catch (error) {
       console.error("Error loading data:", error);
+      setError("Unable to load data. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +64,15 @@ export const useTransactions = (userId) => {
 
   const deleteTransaction = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/transactions/${id}`, { method: "DELETE" });
+      if (!userId) {
+        Alert.alert("Error", "Please sign in again to continue");
+        return;
+      }
+      const response = await fetch(`${API_URL}/transactions/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId }),
+      });
       if (!response.ok) throw new Error("Failed to delete transaction");
 
       // Refresh data after deletion
@@ -65,5 +84,5 @@ export const useTransactions = (userId) => {
     }
   };
 
-  return { transactions, summary, isLoading, loadData, deleteTransaction };
+  return { transactions, summary, isLoading, loadData, deleteTransaction, error };
 };

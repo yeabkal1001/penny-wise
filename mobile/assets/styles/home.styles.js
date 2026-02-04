@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  content: {
+  headerContainer: {
     padding: 20,
     paddingBottom: 0,
   },
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 14,
-    color: COLORS.textLight,
+    color: COLORS.textMuted,
     marginBottom: 2,
   },
   usernameText: {
@@ -73,11 +73,35 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     backgroundColor: COLORS.card,
-    shadowColor: "#000",
+    shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
+  },
+  iconButton: {
+    padding: 10,
+    borderRadius: 18,
+    backgroundColor: COLORS.card,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badge: {
+    position: "absolute",
+    top: -2,
+    right: -2,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: COLORS.white,
   },
   balanceCard: {
     backgroundColor: COLORS.card,
@@ -93,15 +117,98 @@ export const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+  insightsCard: {
+    backgroundColor: COLORS.card,
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  insightsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  insightsTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: COLORS.textDark,
+  },
+  insightsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 14,
+    backgroundColor: COLORS.cardAlt,
+  },
+  insightsButtonText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.textDark,
+  },
+  insightsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 14,
+  },
+  insightItem: {
+    flex: 1,
+  },
+  insightDivider: {
+    width: 1,
+    height: 44,
+    backgroundColor: COLORS.cardBorder,
+    marginHorizontal: 12,
+  },
+  insightLabel: {
+    fontSize: 12,
+    color: COLORS.textDarkMuted,
+  },
+  insightValue: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.textDark,
+    marginTop: 4,
+  },
+  insightHint: {
+    fontSize: 12,
+    color: COLORS.textDarkMuted,
+    marginTop: 4,
+  },
+  insightsActions: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 14,
+  },
+  insightsChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    backgroundColor: COLORS.cardAlt,
+  },
+  insightsChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.textDark,
+  },
   balanceTitle: {
     fontSize: 16,
-    color: COLORS.textLight,
+    color: COLORS.textDarkMuted,
     marginBottom: 8,
   },
   balanceAmount: {
     fontSize: 32,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: COLORS.textDark,
     marginBottom: 20,
   },
   balanceStats: {
@@ -114,11 +221,11 @@ export const styles = StyleSheet.create({
   },
   statDivider: {
     borderRightWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: COLORS.cardBorder,
   },
   balanceStatLabel: {
     fontSize: 14,
-    color: COLORS.textLight,
+    color: COLORS.textDarkMuted,
     marginBottom: 4,
   },
   balanceStatAmount: {
@@ -156,7 +263,7 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: COLORS.cardAlt,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -167,12 +274,12 @@ export const styles = StyleSheet.create({
   transactionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: COLORS.text,
+    color: COLORS.textDark,
     marginBottom: 4,
   },
   transactionCategory: {
     fontSize: 14,
-    color: COLORS.textLight,
+    color: COLORS.textDarkMuted,
   },
   transactionRight: {
     alignItems: "flex-end",
@@ -184,12 +291,12 @@ export const styles = StyleSheet.create({
   },
   transactionDate: {
     fontSize: 12,
-    color: COLORS.textLight,
+    color: COLORS.textDarkMuted,
   },
   deleteButton: {
     padding: 15,
     borderLeftWidth: 1,
-    borderLeftColor: COLORS.border,
+    borderLeftColor: COLORS.cardBorder,
   },
   transactionsContainer: {
     marginBottom: 20,
@@ -219,11 +326,11 @@ export const styles = StyleSheet.create({
   emptyStateTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: COLORS.text,
+    color: COLORS.textDark,
     marginBottom: 8,
   },
   emptyStateText: {
-    color: COLORS.textLight,
+    color: COLORS.textDarkMuted,
     fontSize: 14,
     textAlign: "center",
     marginBottom: 20,
@@ -254,11 +361,24 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 5,
   },
+  linkButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    backgroundColor: COLORS.card,
+  },
+  linkButtonText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.textDark,
+  },
   transactionsList: {
     flex: 1,
-    marginHorizontal: 20,
   },
   transactionsListContent: {
-    paddingBottom: 20,
+    paddingBottom: 140,
   },
 });
