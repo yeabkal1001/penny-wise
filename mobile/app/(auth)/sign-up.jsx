@@ -143,7 +143,7 @@ export default function SignUpScreen() {
         />
 
         <TouchableOpacity
-          onPress={() => router.push("/reset-password")}
+          onPress={() => router.push("/(auth)/reset-password")}
           style={{ alignSelf: "flex-end", marginBottom: 6 }}
         >
           <Text style={styles.linkText}>Forgot password?</Text>

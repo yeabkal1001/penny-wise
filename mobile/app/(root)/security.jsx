@@ -29,7 +29,7 @@ export default function SecurityScreen() {
           <Text style={styles.sectionTitle}>Password</Text>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => router.push("/reset-password")}
+            onPress={() => router.push("/(root)/reset-password")}
           >
             <Text style={styles.actionButtonText}>Reset password</Text>
           </TouchableOpacity>
