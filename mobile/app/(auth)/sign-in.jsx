@@ -109,7 +109,9 @@ export default function Page() {
       extraScrollHeight={30}
     >
       <View style={styles.container}>
-        <Image source={require("../../assets/images/revenue-i4.png")} style={styles.illustration} />
+        <View style={{ alignItems: "center" }}>
+          <Image source={require("../../assets/images/revenue-i4.png")} style={styles.illustration} />
+        </View>
         <Text style={styles.title}>Welcome Back</Text>
 
         {error ? (
