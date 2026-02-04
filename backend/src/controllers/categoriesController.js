@@ -18,14 +18,15 @@ export async function getCategoriesByUserId(req, res) {
 export async function createCategory(req, res) {
   try {
     const { user_id, name, icon, color } = req.body;
+    const trimmedName = String(name || "").trim();
 
-    if (!user_id || !name) {
+    if (!user_id || !trimmedName) {
       return res.status(400).json({ message: "user_id and name are required" });
     }
 
     const result = await sql`
       INSERT INTO categories(user_id, name, icon, color)
-      VALUES (${user_id}, ${name}, ${icon || "pricetag"}, ${color || "#00D09C"})
+      VALUES (${user_id}, ${trimmedName}, ${icon || "pricetag"}, ${color || "#00D09C"})
       ON CONFLICT (user_id, name) DO NOTHING
       RETURNING *
     `;
@@ -45,6 +46,10 @@ export async function deleteCategory(req, res) {
   try {
     const { id } = req.params;
     const { user_id } = req.body;
+
+    if (Number.isNaN(Number(id))) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
 
     if (!user_id) {
       return res.status(400).json({ message: "user_id is required" });

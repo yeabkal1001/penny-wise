@@ -18,14 +18,17 @@ export async function getBudgetsByUserId(req, res) {
 export async function createBudget(req, res) {
   try {
     const { user_id, category, amount, period, alert_threshold } = req.body;
+    const trimmedCategory = String(category || "").trim();
+    const parsedAmount = Number(amount);
+    const parsedAlert = Number(alert_threshold ?? 0);
 
-    if (!user_id || !category || amount === undefined) {
+    if (!user_id || !trimmedCategory || Number.isNaN(parsedAmount)) {
       return res.status(400).json({ message: "user_id, category, amount are required" });
     }
 
     const budget = await sql`
       INSERT INTO budgets(user_id, category, amount, period, alert_threshold)
-      VALUES (${user_id}, ${category}, ${amount}, ${period || "monthly"}, ${alert_threshold || 0})
+      VALUES (${user_id}, ${trimmedCategory}, ${parsedAmount}, ${period || "monthly"}, ${Number.isNaN(parsedAlert) ? 0 : parsedAlert})
       RETURNING *
     `;
 
@@ -41,8 +44,20 @@ export async function updateBudget(req, res) {
     const { id } = req.params;
     const { user_id, amount, period, alert_threshold } = req.body;
 
+    if (Number.isNaN(Number(id))) {
+      return res.status(400).json({ message: "Invalid budget ID" });
+    }
+
     if (!user_id) {
       return res.status(400).json({ message: "user_id is required" });
+    }
+
+    if (amount !== undefined && Number.isNaN(Number(amount))) {
+      return res.status(400).json({ message: "amount must be a number" });
+    }
+
+    if (alert_threshold !== undefined && Number.isNaN(Number(alert_threshold))) {
+      return res.status(400).json({ message: "alert_threshold must be a number" });
     }
 
     const result = await sql`
@@ -69,6 +84,10 @@ export async function deleteBudget(req, res) {
   try {
     const { id } = req.params;
     const { user_id } = req.body;
+
+    if (Number.isNaN(Number(id))) {
+      return res.status(400).json({ message: "Invalid budget ID" });
+    }
 
     if (!user_id) {
       return res.status(400).json({ message: "user_id is required" });

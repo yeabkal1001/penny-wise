@@ -18,14 +18,17 @@ export async function getNotificationsByUserId(req, res) {
 export async function createNotification(req, res) {
   try {
     const { user_id, type, title, message } = req.body;
+    const trimmedType = String(type || "").trim();
+    const trimmedTitle = String(title || "").trim();
+    const trimmedMessage = String(message || "").trim();
 
-    if (!user_id || !type || !title || !message) {
+    if (!user_id || !trimmedType || !trimmedTitle || !trimmedMessage) {
       return res.status(400).json({ message: "user_id, type, title, message are required" });
     }
 
     const notification = await sql`
       INSERT INTO notifications(user_id, type, title, message)
-      VALUES (${user_id}, ${type}, ${title}, ${message})
+      VALUES (${user_id}, ${trimmedType}, ${trimmedTitle}, ${trimmedMessage})
       RETURNING *
     `;
 
@@ -40,6 +43,10 @@ export async function markNotificationRead(req, res) {
   try {
     const { id } = req.params;
     const { user_id } = req.body;
+
+    if (Number.isNaN(Number(id))) {
+      return res.status(400).json({ message: "Invalid notification ID" });
+    }
 
     if (!user_id) {
       return res.status(400).json({ message: "user_id is required" });

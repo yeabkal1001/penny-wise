@@ -18,14 +18,17 @@ export async function getTransactionsByUserId(req, res) {
 export async function createTransaction(req, res) {
   try {
     const { title, amount, category, user_id } = req.body;
+    const trimmedTitle = String(title || "").trim();
+    const trimmedCategory = String(category || "").trim();
+    const parsedAmount = Number(amount);
 
-    if (!title || !user_id || !category || amount === undefined) {
+    if (!trimmedTitle || !user_id || !trimmedCategory || Number.isNaN(parsedAmount)) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const transaction = await sql`
       INSERT INTO transactions(user_id,title,amount,category)
-      VALUES (${user_id},${title},${amount},${category})
+      VALUES (${user_id},${trimmedTitle},${parsedAmount},${trimmedCategory})
       RETURNING *
     `;
 
