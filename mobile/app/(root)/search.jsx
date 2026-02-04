@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Alert, FlatList, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PageLoader from "../../components/PageLoader";
@@ -39,6 +39,13 @@ export default function SearchScreen() {
     loadData();
     loadCategories();
   }, [loadData, loadCategories]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      loadCategories();
+    }, [loadData, loadCategories])
+  );
 
   const categoryOptions = categories;
 

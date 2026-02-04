@@ -57,7 +57,7 @@ export default function Layout() {
               return (
                 <Ionicons
                   name="add-circle"
-                  size={iconSize + 10}
+                  size={iconSize + 4}
                   color={COLORS.primary}
                 />
               );
@@ -102,13 +102,7 @@ export default function Layout() {
       <Tabs.Screen name="index" options={{ tabBarIconStyle: { marginTop: 2 } }} />
       <Tabs.Screen name="analysis" options={{ tabBarIconStyle: { marginTop: 2 } }} />
       <Tabs.Screen name="categories" options={{ tabBarIconStyle: { marginTop: 2 } }} />
-      <Tabs.Screen
-        name="create"
-        options={{
-          tabBarIconStyle: { marginTop: -8 },
-          tabBarItemStyle: { flex: 1, alignItems: "center", justifyContent: "center" },
-        }}
-      />
+      <Tabs.Screen name="create" options={{ tabBarIconStyle: { marginTop: 0 } }} />
       <Tabs.Screen name="budgets" options={{ tabBarIconStyle: { marginTop: 2 } }} />
       <Tabs.Screen name="goals" options={{ tabBarIconStyle: { marginTop: 2 } }} />
       <Tabs.Screen name="profile" options={{ tabBarIconStyle: { marginTop: 2 } }} />

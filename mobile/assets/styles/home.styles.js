@@ -361,6 +361,15 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 5,
   },
+  transactionsHeaderActions: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 12,
+  },
   linkButton: {
     flexDirection: "row",
     alignItems: "center",

@@ -7,9 +7,9 @@ import {
   ActivityIndicatorBase,
   ActivityIndicator,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "../../constants/api";
 import { styles } from "../../assets/styles/create.styles";
 import { COLORS } from "../../constants/colors";
@@ -36,6 +36,12 @@ const CreateScreen = () => {
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadCategories();
+    }, [loadCategories])
+  );
 
   const handleCreate = async () => {
     // validations

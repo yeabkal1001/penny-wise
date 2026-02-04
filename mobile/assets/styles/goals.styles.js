@@ -120,4 +120,44 @@ export const styles = StyleSheet.create({
   dangerText: {
     color: "#E11D48",
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(15, 23, 42, 0.4)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modalCard: {
+    width: "100%",
+    borderRadius: 20,
+    backgroundColor: COLORS.card,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.textDark,
+  },
+  modalSub: {
+    fontSize: 12,
+    color: COLORS.textDarkMuted,
+    marginTop: 6,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginTop: 16,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalCancelButton: {
+    backgroundColor: COLORS.cardAlt,
+  },
 });

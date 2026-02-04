@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { Alert, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "../../assets/styles/goals.styles";
 import { COLORS } from "../../constants/colors";
@@ -25,6 +34,8 @@ export default function GoalsScreen() {
   const [newName, setNewName] = useState("");
   const [newTarget, setNewTarget] = useState("");
   const [newSaved, setNewSaved] = useState("");
+  const [editGoal, setEditGoal] = useState(null);
+  const [editTarget, setEditTarget] = useState("");
 
   useEffect(() => {
     loadGoals();
@@ -54,40 +65,28 @@ export default function GoalsScreen() {
     }
   };
 
-  const handleUpdateGoal = async (goal) => {
-    if (!user?.id) return;
-    const initial = Number(goal.target_amount ?? goal.target).toFixed(0);
+  const handleUpdateGoal = (goal) => {
+    if (!goal) return;
+    const initial = Number(goal.target_amount ?? goal.target ?? 0).toFixed(0);
+    setEditGoal(goal);
+    setEditTarget(initial);
+  };
 
-    const performUpdate = async (value) => {
-      const parsed = Number(value);
-      if (Number.isNaN(parsed)) return;
-      setIsSubmitting(true);
-      try {
-        await updateGoal(goal.id, { user_id: user.id, target_amount: parsed });
-        await loadGoals();
-      } catch (error) {
-        console.log("Error updating goal", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-
-    if (Platform.OS === "web" && typeof window !== "undefined") {
-      const value = window.prompt("Update target amount", initial);
-      if (value !== null) performUpdate(value);
-      return;
+  const handleSaveEdit = async () => {
+    if (!user?.id || !editGoal) return;
+    const parsed = Number(editTarget);
+    if (Number.isNaN(parsed)) return;
+    setIsSubmitting(true);
+    try {
+      await updateGoal(editGoal.id, { user_id: user.id, target_amount: parsed });
+      await loadGoals();
+    } catch (error) {
+      console.log("Error updating goal", error);
+    } finally {
+      setIsSubmitting(false);
+      setEditGoal(null);
+      setEditTarget("");
     }
-
-    Alert.prompt(
-      "Update target",
-      "Enter a new goal target",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Save", onPress: performUpdate },
-      ],
-      "plain-text",
-      initial
-    );
   };
 
   const handleUpdateSaved = async (goal) => {
@@ -254,6 +253,42 @@ export default function GoalsScreen() {
           );
         })}
       </View>
+
+      <Modal
+        visible={Boolean(editGoal)}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setEditGoal(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Edit goal</Text>
+            <Text style={styles.modalSub}>Update the savings target.</Text>
+            <TextInput
+              style={styles.input}
+              value={editTarget}
+              onChangeText={setEditTarget}
+              placeholder="Target amount"
+              placeholderTextColor={COLORS.textDarkMuted}
+              keyboardType="numeric"
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalCancelButton, styles.modalButton]}
+                onPress={() => setEditGoal(null)}
+              >
+                <Text style={styles.linkButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.primaryButton, styles.modalButton]}
+                onPress={handleSaveEdit}
+              >
+                <Text style={styles.primaryButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }

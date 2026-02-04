@@ -230,45 +230,6 @@ export default function Page() {
 
             <View style={styles.transactionsHeaderContainer}>
               <Text style={styles.sectionTitle}>Recent Transactions</Text>
-              <View
-                style={{ flexDirection: "row", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}
-              >
-                <TouchableOpacity
-                  style={styles.linkButton}
-                  onPress={() => router.push("/analysis")}
-                >
-                  <Ionicons name="stats-chart" size={14} color={COLORS.textDark} />
-                  <Text style={styles.linkButtonText}>Analysis</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.linkButton}
-                  onPress={() => router.push("/categories")}
-                >
-                  <Ionicons name="grid-outline" size={14} color={COLORS.textDark} />
-                  <Text style={styles.linkButtonText}>Categories</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.linkButton}
-                  onPress={() => router.push("/transactions")}
-                >
-                  <Ionicons name="list" size={14} color={COLORS.textDark} />
-                  <Text style={styles.linkButtonText}>All</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.linkButton}
-                  onPress={() => router.push("/profile")}
-                >
-                  <Ionicons name="person-circle" size={14} color={COLORS.textDark} />
-                  <Text style={styles.linkButtonText}>Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.linkButton}
-                  onPress={() => router.push("/notifications")}
-                >
-                  <Ionicons name="notifications" size={14} color={COLORS.textDark} />
-                  <Text style={styles.linkButtonText}>Alerts</Text>
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
         }

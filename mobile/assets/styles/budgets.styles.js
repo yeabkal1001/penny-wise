@@ -32,11 +32,18 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "transparent",
     shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 3,
+  },
+  cardHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   cardTitle: {
     fontSize: 16,
@@ -56,6 +63,36 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textDark,
     marginTop: 12,
+  },
+  categoryChipsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 12,
+  },
+  categoryChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    backgroundColor: COLORS.cardAlt,
+    borderWidth: 1,
+    borderColor: COLORS.cardBorder,
+  },
+  categoryChipActive: {
+    backgroundColor: COLORS.card,
+  },
+  categoryChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.textDark,
+  },
+  categoryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   primaryButton: {
     marginTop: 12,
@@ -118,5 +155,45 @@ export const styles = StyleSheet.create({
   },
   dangerText: {
     color: "#E11D48",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(15, 23, 42, 0.4)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modalCard: {
+    width: "100%",
+    borderRadius: 20,
+    backgroundColor: COLORS.card,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.textDark,
+  },
+  modalSub: {
+    fontSize: 12,
+    color: COLORS.textDarkMuted,
+    marginTop: 6,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginTop: 16,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalCancelButton: {
+    backgroundColor: COLORS.cardAlt,
   },
 });

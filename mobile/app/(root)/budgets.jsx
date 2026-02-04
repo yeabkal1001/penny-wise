@@ -1,11 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
-import { Alert, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import {
+  Alert,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PageLoader from "../../components/PageLoader";
 import { useTransactions } from "../../hooks/useTransactions";
 import { useBudgets } from "../../hooks/useBudgets";
+import { useCategories } from "../../hooks/useCategories";
 import { styles } from "../../assets/styles/budgets.styles";
 import { COLORS } from "../../constants/colors";
 import ErrorBanner from "../../components/ErrorBanner";
@@ -23,14 +33,31 @@ export default function BudgetsScreen() {
     deleteBudget,
     error: budgetsError,
   } = useBudgets(user?.id);
+  const {
+    categories,
+    isLoading: isCategoriesLoading,
+    loadCategories,
+    error: categoriesError,
+  } = useCategories(user?.id);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [newAmount, setNewAmount] = useState("");
+  const [editBudget, setEditBudget] = useState(null);
+  const [editAmount, setEditAmount] = useState("");
 
   useEffect(() => {
     loadData();
     loadBudgets();
-  }, [loadData, loadBudgets]);
+    loadCategories();
+  }, [loadData, loadBudgets, loadCategories]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      loadBudgets();
+      loadCategories();
+    }, [loadData, loadBudgets, loadCategories])
+  );
 
   const spendingByCategory = useMemo(() => {
     const totals = {};
@@ -43,7 +70,7 @@ export default function BudgetsScreen() {
     return totals;
   }, [transactions]);
 
-  const isLoading = isTxLoading || isBudgetsLoading || isSubmitting;
+  const isLoading = isTxLoading || isBudgetsLoading || isCategoriesLoading || isSubmitting;
 
   const handleCreateBudget = async () => {
     if (!user?.id || !newCategory.trim() || !newAmount) return;
@@ -65,40 +92,27 @@ export default function BudgetsScreen() {
     }
   };
 
-  const handleUpdateBudget = async (budget) => {
-    if (!user?.id) return;
-    const initial = Number(budget.amount).toFixed(0);
+  const handleUpdateBudget = (budget) => {
+    if (!budget) return;
+    setEditBudget(budget);
+    setEditAmount(Number(budget.amount || 0).toFixed(0));
+  };
 
-    const performUpdate = async (value) => {
-      const parsed = Number(value);
-      if (Number.isNaN(parsed)) return;
-      setIsSubmitting(true);
-      try {
-        await updateBudget(budget.id, { user_id: user.id, amount: parsed });
-        await loadBudgets();
-      } catch (error) {
-        console.log("Error updating budget", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-
-    if (Platform.OS === "web" && typeof window !== "undefined") {
-      const value = window.prompt("Update budget amount", initial);
-      if (value !== null) performUpdate(value);
-      return;
+  const handleSaveEdit = async () => {
+    if (!user?.id || !editBudget) return;
+    const parsed = Number(editAmount);
+    if (Number.isNaN(parsed)) return;
+    setIsSubmitting(true);
+    try {
+      await updateBudget(editBudget.id, { user_id: user.id, amount: parsed });
+      await loadBudgets();
+    } catch (error) {
+      console.log("Error updating budget", error);
+    } finally {
+      setIsSubmitting(false);
+      setEditBudget(null);
+      setEditAmount("");
     }
-
-    Alert.prompt(
-      "Update budget",
-      "Enter a new monthly limit",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Save", onPress: performUpdate },
-      ],
-      "plain-text",
-      initial
-    );
   };
 
   const handleDeleteBudget = (budgetId) => {
@@ -145,10 +159,33 @@ export default function BudgetsScreen() {
       </View>
 
       <View style={styles.content}>
-        <ErrorBanner message={budgetsError} />
+        <ErrorBanner message={budgetsError || categoriesError} />
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Create budget</Text>
           <Text style={styles.cardSub}>Set a monthly limit per category.</Text>
+          {categories.length > 0 && (
+            <View style={styles.categoryChipsRow}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={[
+                    styles.categoryChip,
+                    newCategory === category.name && styles.categoryChipActive,
+                    category.color && { borderColor: category.color },
+                  ]}
+                  onPress={() => setNewCategory(category.name)}
+                >
+                  <View
+                    style={[
+                      styles.categoryDot,
+                      { backgroundColor: category.color || COLORS.primary },
+                    ]}
+                  />
+                  <Text style={styles.categoryChipText}>{category.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
           <TextInput
             style={styles.input}
             value={newCategory}
@@ -184,9 +221,25 @@ export default function BudgetsScreen() {
           const limit = Number(item.amount) || 0;
           const progress = limit > 0 ? Math.min(spent / limit, 1) : 0;
 
+          const categoryMeta = categories.find((cat) => cat.name === item.category);
+
           return (
-            <View key={item.id} style={styles.card}>
+            <View
+              key={item.id}
+              style={[
+                styles.card,
+                categoryMeta?.color && { borderColor: categoryMeta.color, borderWidth: 1 },
+              ]}
+            >
+              <View style={styles.cardHeaderRow}>
+                <View
+                  style={[
+                    styles.categoryDot,
+                    { backgroundColor: categoryMeta?.color || COLORS.primary },
+                  ]}
+                />
               <Text style={styles.cardTitle}>{item.category}</Text>
+              </View>
               <Text style={styles.cardSub}>Monthly budget</Text>
               <View style={styles.progressTrack}>
                 <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
@@ -219,6 +272,42 @@ export default function BudgetsScreen() {
           );
         })}
       </View>
+
+      <Modal
+        visible={Boolean(editBudget)}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setEditBudget(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Edit budget</Text>
+            <Text style={styles.modalSub}>Update the monthly limit.</Text>
+            <TextInput
+              style={styles.input}
+              value={editAmount}
+              onChangeText={setEditAmount}
+              placeholder="Monthly limit"
+              placeholderTextColor={COLORS.textDarkMuted}
+              keyboardType="numeric"
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalCancelButton, styles.modalButton]}
+                onPress={() => setEditBudget(null)}
+              >
+                <Text style={styles.linkButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.primaryButton, styles.modalButton]}
+                onPress={handleSaveEdit}
+              >
+                <Text style={styles.primaryButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
