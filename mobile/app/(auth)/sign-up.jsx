@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { styles } from "@/assets/styles/auth.styles.js";
@@ -22,6 +22,16 @@ export default function SignUpScreen() {
   const onSignUpPress = async () => {
     if (!isLoaded) return;
 
+    if (!emailAddress.trim()) {
+      setError("Please enter your email.");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Please enter a password.");
+      return;
+    }
+
     // Start sign-up process using email and password provided
     try {
       await signUp.create({
@@ -38,6 +48,8 @@ export default function SignUpScreen() {
     } catch (err) {
       if (err.errors?.[0]?.code === "form_identifier_exists") {
         setError("That email address is already in use. Please try another.");
+      } else if (err.errors?.[0]?.message) {
+        setError(err.errors[0].message);
       } else {
         setError("An error occurred. Please try again.");
       }
@@ -152,6 +164,13 @@ export default function SignUpScreen() {
         <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
+
+        {Platform.OS === "web" && (
+          <View
+            id="clerk-captcha"
+            style={{ minHeight: 60, marginTop: 12, width: "100%" }}
+          />
+        )}
 
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Already have an account?</Text>
